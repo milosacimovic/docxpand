@@ -1,0 +1,53 @@
+{
+    // A Python config
+    "configurations": [
+        {
+            "name": "Python: Render SVGs and PNGs of synthetic documents",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/scripts/dataset/generate_fake_structured_documents.py",
+            "args": [
+                "-n",  "1",
+                "-o", "test",
+                "-t", "docxpand/templates/id_card_td1_a/generator.json",
+                "-s", "http://0.0.0.0:7860"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: Delete field from other side",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/scripts/dataset/delete_other_side_fields.py",
+            "args": [
+                "-dd", "test/test.json",
+                "-o", "test_cleaned"
+            ]
+        },
+        
+        {
+            "name": "Python: Extract field locations",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/scripts/dataset/extract_field_locations_from_svgs.py",
+            "args": [
+                "-dd", "test_cleaned/test.json",
+                "-di", "test",
+                "-o", "test_field_locations"
+            ]
+        },
+        {
+            "name": "Python: Extract OCR from SVG",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/scripts/dataset/extract_ocr_from_svgs.py",
+            "args": [
+                "-dd", "test/test.json",
+                "-di", "test",
+                "-o", "test_ocr"
+            ]
+        },
+
+    ]
+}

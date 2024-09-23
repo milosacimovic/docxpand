@@ -49,6 +49,7 @@ def generate_fake_structured_documents(
     output_directory: str,
     stable_diffusion_api_url: str,
 ) -> None:
+    renderer = ChromeSVGRenderer()
     """Generate fake structured documents from an SVG template."""
     os.makedirs(os.path.abspath(output_directory), exist_ok=True)
     basename = os.path.basename(os.path.normpath(output_directory))
@@ -60,7 +61,7 @@ def generate_fake_structured_documents(
             f"A JSON dataset already exists in {output_directory}. "
             "Please set a new output directory, or remove the existing files."
         )
-    generator = Generator(template, None, stable_diffusion_api_url or "")
+    generator = Generator(template, renderer, stable_diffusion_api_url or "")
     all_docs = []
     for _ in range(number):
         try:
@@ -78,7 +79,7 @@ def generate_fake_structured_documents(
             "documents": all_docs,
             "info": {
                 "author": getpass.getuser(),
-                "createdAt": datetime.datetime.utcnow().isoformat(),
+                "createdAt": datetime.datetime.now(datetime.timezone.utc).isoformat(),
                 "description": (
                     f"Generated document images for template {template}."
                 ),

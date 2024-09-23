@@ -397,7 +397,7 @@ class Generator:
                 png_output = output_filename.replace(".svg", ".png")
                 img = self.renderer.render(output_filename)
                 img.write(png_output)
-                os.remove(output_filename)
+                #os.remove(output_filename)
                 output_filename = png_output
             output_filenames.append(output_filename)
             creation_date = datetime.datetime.utcnow().isoformat()

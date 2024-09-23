@@ -331,6 +331,8 @@ class Image:
         Args:
             format: image format (default is png)
         """
+        if not isinstance(self.array, np.ndarray):
+            self._array = np.array(self.array)
         _, buffer = cv2.imencode(f".{format}", self.array)
         encoded = base64.b64encode(buffer)
         encoded_str = encoded.decode("ascii")
