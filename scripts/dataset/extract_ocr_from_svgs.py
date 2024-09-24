@@ -66,9 +66,11 @@ def extract_ocr_from_svgs(
 
         print("Processing", filename)
         # Call the OCR extractor which is a node script
-        subprocess.run(['node', 'scripts/dataset/extract_ocr_from_svg.js', 
+        cmd = ['node', 'scripts/dataset/extract_ocr_from_svg.js', 
                    filename, 
-                   os.path.join(document_images, 'word_bboxes.json')])
+                   os.path.join(document_images, 'word_bboxes.json')]
+        print("Cmd: ", " ".join(cmd))
+        subprocess.run(cmd)
 
         # Load the extracted OCR data
         with open(os.path.join(document_images, 'word_bboxes.json'), 'r') as f:

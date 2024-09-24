@@ -67,6 +67,7 @@ def generate_fake_structured_documents(
         try:
             side_entries = generator.generate_images(output_directory)
         except Exception as err:
+            logger.error(err, exc_info=True)
             logger.warning(
                 f"Got an error while generating images ({type(err)}: {err}), "
                 "continuing..."

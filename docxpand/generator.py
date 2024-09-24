@@ -44,6 +44,8 @@ class Generator:
         nb_parts = int(ChoiceProvider.random_choice(field.parts)) if field.parts else 1
         separator = field.separator or " "
         nb_lines = field.lines or 1
+        if hasattr(field, "uppercase"):
+            uppercase = field.uppercase or False
         max_chars_per_line = field.max_chars_per_line or 36
         method = CallableInstantiable.get_methods(
             field.provider, generator=faker, **context
@@ -55,6 +57,10 @@ class Generator:
             generated_lines = self.generate_multi_line_multi_part(
                 method, nb_parts, separator, nb_lines, max_chars_per_line
             )
+        if uppercase:
+            generated_lines = [
+                line.upper() if line else line for line in generated_lines
+            ]
         if nb_lines == 1:
             return generated_lines[0]
         return generated_lines
@@ -135,6 +141,9 @@ class Generator:
         existing_fields: tp.Dict,
         context: tp.Dict,
     ) -> str:
+        uppercase = False
+        if hasattr(field, "uppercase"):
+            uppercase = field.uppercase or False
         values = CallableInstantiable.call(
             field.provider,
             generator=faker,
@@ -143,6 +152,11 @@ class Generator:
         )
         if field.format:
             values = field.format.format(**values)
+        if uppercase:
+            if isinstance(values, list):
+                values = [value.upper() for value in values]
+            else:
+                values = values.upper()
         return values
 
     def generate_photo(
@@ -393,6 +407,10 @@ class Generator:
                 f"{document_id}-{self.template.name}-{side_name}.svg",
             )
             canvas.render(output_filename, True)
+
+            # Fix SVG 
+            
+
             if self.renderer:
                 png_output = output_filename.replace(".svg", ".png")
                 img = self.renderer.render(output_filename)

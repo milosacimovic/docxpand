@@ -30,6 +30,7 @@ tesserocr = "^2.6.2"
 lpips = "^0.1.4"
 torch = "2.0.0"
 matplotlib = "^3.8.2"
+rembg = "^2.0.59"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"

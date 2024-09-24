@@ -86,6 +86,19 @@ class GenderProvider:
             raise ValueError("Gender is needed.")
         first_letter = gender[0].upper()
         return first_letter if first_letter in ["M", "F"] else "U"
+    
+
+class LatinoGenderProvider:
+    @staticmethod
+    def get_gender_letter(gender: tp.Optional[str] = None) -> str:
+        if not gender:
+            raise ValueError("Gender is needed.")
+        first_letter = gender[0].upper()
+        if first_letter == "M":
+            return "H"
+        if first_letter == "F":
+            return "M"
+        return "U"
 
 
 class HeightProvider:

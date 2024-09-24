@@ -36,7 +36,7 @@ async function extractWordBoundingBoxes(svgFilePath) {
         pageW = pagerect.width
         pageH = pagerect.height
 
-        const svg = document.getElementById('Textes');
+        const svg = document.getElementById('Texte') || document.getElementById('Textes');
         console.log(svg);
         if (!svg) {
             console.log('SVG element not found');
@@ -50,6 +50,11 @@ async function extractWordBoundingBoxes(svgFilePath) {
         let wordBboxes = [];
 
         textElements.forEach(textElem => {
+
+            // if textElement has "signature" in its id then skip it
+            if (textElem.id.includes("signature")) {
+                return;
+            }
 
             lineRect = textElem.getBoundingClientRect()
             line_x = lineRect.x
@@ -104,6 +109,7 @@ async function extractWordBoundingBoxes(svgFilePath) {
                   }
 
                 let style = tspan.getAttribute('style');
+                let cls = tspan.getAttribute('class');
                 // if style is defined then override those of tspan by parsing the style
                 if (style == null) {
                     style = textStyle
@@ -113,11 +119,12 @@ async function extractWordBoundingBoxes(svgFilePath) {
 
                 let tempWordBboxes = [];
 
-                function createTempTSpanElement(word, style, textElem) {
+                function createTempTSpanElement(word, style, cls, textElem) {
                     const tempText = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
                     tempText.textContent = word;
 
                     // Copy attributes from the original text element
+                    tempText.setAttribute('class', cls);
                     tempText.setAttribute('style', style);
 
                     // Append the temporary text element to the SVG
@@ -126,7 +133,6 @@ async function extractWordBoundingBoxes(svgFilePath) {
                     // Get the bounding box of the word
                     const boundingBox = tempText.getBoundingClientRect();
                     // Add the blockType to the bounding box
-                    boundingBox.blockType = 'WORD';
                     textElem.removeChild(tempText);
 
                     return boundingBox;
@@ -136,12 +142,13 @@ async function extractWordBoundingBoxes(svgFilePath) {
 
                 // Create a temporary <text> element for each word to calculate its bounding box
                 words.forEach((word, index) => {
-                    const boundingBox = createTempTSpanElement(word, style, textElem);
+                    const boundingBox = createTempTSpanElement(word, style, cls, textElem);
 
                     tempWordBboxes.push({
                         word: word,
                         x: 0,
                         y: 0,
+                        blockType: 'WORD',
                         width: boundingBox.width,
                         height: boundingBox.height
                     });
@@ -169,7 +176,7 @@ async function extractWordBoundingBoxes(svgFilePath) {
         return [wordBboxes, pageX, pageY, pageW, pageH, style];
     });
 
-    console.log(style)
+    console.log("word BBoxes", wordBoundingBoxes)
     //console.log(pageX);
     await browser.close();
 

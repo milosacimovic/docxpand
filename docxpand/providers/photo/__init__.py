@@ -11,6 +11,7 @@ import imagehash
 import numpy as np
 from dateutil.relativedelta import relativedelta
 from deepface import DeepFace
+from rembg import remove
 
 from docxpand.geometry import BoundingBox, Point
 from docxpand.image import ColorSpace, Image
@@ -102,6 +103,14 @@ class IDPhoto(tp.NamedTuple):
             (image.width, image.height),
         )
         image = image.crop(bbox)
+
+        # Convert to RGB numpy array
+        image_np = image.array
+        # Remove the background
+        image_np = remove(image_np)
+        # Reset the image array
+        image._array = image_np
+
         id_photo = IDPhoto(None, gender, age, ethnicity, image)
         return id_photo, image
 
@@ -397,9 +406,10 @@ class StableDiffusionProvider(Provider):
 
         # We asked only for one image, decoding it using OpenCV
         image = Image.from_buffer(base64.b64decode(response["images"][0]))
-        return IDPhoto.from_image(
+        id_photo = IDPhoto.from_image(
             image, target_gender, target_age, target_ethnicity
         )[0]
+        return id_photo
 
 
 class ThisPersonDoesNotExistProvider(Provider):

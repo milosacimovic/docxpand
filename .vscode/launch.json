@@ -7,13 +7,29 @@
             "request": "launch",
             "program": "${workspaceFolder}/scripts/dataset/generate_fake_structured_documents.py",
             "args": [
-                "-n",  "1",
+                "-n",  "10",
                 "-o", "test",
                 "-t", "docxpand/templates/id_card_td1_a/generator.json",
                 "-s", "http://0.0.0.0:7860"
             ],
             "cwd": "${workspaceFolder}",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "Python: Render SVGs and PNGs of custom template",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/scripts/dataset/generate_fake_structured_documents.py",
+            "args": [
+                "-n",  "10",
+                "-o", "test",
+                "-t", "docxpand/templates/pp_td3_d/generator.json",
+                "-s", "http://0.0.0.0:7860"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false
         },
         {
             "name": "Python: Delete field from other side",
